@@ -135,6 +135,7 @@ public class Server {
             try {
               // Create a PaymentIntent with the order amount and currency
               PaymentIntent intent = PaymentIntent.create(createParams);
+              System.out.println("Payment Intent Created: " + gson.toJson(intent));
 
               // Send PaymentIntent details to client
               return gson.toJson(new CreatePaymentResponse(intent.getClientSecret()));
@@ -173,20 +174,22 @@ public class Server {
                 return "";
             }
 
+            System.out.println(String.format("Webhook received [%s]: %s", event.getType(), event.getData().toString()));
+
             switch (event.getType()) {
-            case "payment_intent.succeeded":
-                // Fulfill any orders, e-mail receipts, etc
-                // To cancel the payment you will need to issue a Refund
-                // (https://stripe.com/docs/api/refunds)
-                System.out.println("💰Payment received!");
-                break;
-            case "payment_intent.payment_failed":
-                System.out.println("❌ Payment failed.");
-                break;
-            default:
-                // Unexpected event type
-                response.status(400);
-                return "";
+                case "payment_intent.succeeded":
+                    // Fulfill any orders, e-mail receipts, etc
+                    // To cancel the payment you will need to issue a Refund
+                    // (https://stripe.com/docs/api/refunds)
+                    System.out.println("💰Payment received!");
+                    break;
+                case "payment_intent.payment_failed":
+                    System.out.println("❌ Payment failed.");
+                    break;
+                default:
+                    // Unexpected event type
+                    response.status(400);
+                    return "";
             }
 
             response.status(200);

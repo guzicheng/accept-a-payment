@@ -5,6 +5,8 @@ import App from './App.vue';
 
 import SrCheckoutForm from './components/SrCheckoutForm.vue'
 import SrReturn from './components/SrReturn.vue'
+import SrSubscriptionForm from './components/SrSubscriptionForm.vue';
+import SrSubscriptionReturn from './components/SrSubscriptionReturn.vue';
 
 const routes = [
   { 
@@ -15,8 +17,20 @@ const routes = [
      } 
   },
   { 
-    path: '/return', 
+    path: '/subscription', 
+    component: SrSubscriptionForm, 
+    meta: { 
+      title: 'Payment'
+     } 
+  },
+  { 
+    path: '/payment-return', 
     component: SrReturn, 
+    meta: { title: 'Return' } 
+  }, 
+  { 
+    path: '/sub-return', 
+    component: SrSubscriptionReturn, 
     meta: { title: 'Return' } 
   }, 
 ]

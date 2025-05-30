@@ -26,6 +26,7 @@ onMounted(async () => {
   paymentElement.mount("#payment-element");
   const linkAuthenticationElement = elements.create("linkAuthentication");
   linkAuthenticationElement.mount("#link-authentication-element");
+  
   isLoading.value = false;
 });
 
@@ -39,7 +40,7 @@ const handleSubmit = async () => {
   const { error } = await stripe.confirmPayment({
     elements,
     confirmParams: {
-      return_url: `${window.location.origin}/return`
+      return_url: `${window.location.origin}/payment-return`
     }
   });
 
@@ -52,6 +53,7 @@ const handleSubmit = async () => {
   isLoading.value = false;
 }
 </script>
+
 <template>
   <main>
     <h1>Payment</h1>
@@ -64,16 +66,11 @@ const handleSubmit = async () => {
       >in your dashboard</a>.
     </p>
 
-    <form
-      id="payment-form"
-      @submit.prevent="handleSubmit"
-    >
+    <form id="payment-form"
+        @submit.prevent="handleSubmit">
       <div id="link-authentication-element" />
       <div id="payment-element" />
-      <button
-        id="submit"
-        :disabled="isLoading"
-      >
+      <button id="submit" :disabled="isLoading">
         Pay now
       </button>
       <sr-messages :messages="messages" />

@@ -46,6 +46,7 @@ public class Server {
 
             String sessionId = request.queryParams("sessionId");
             Session session = Session.retrieve(sessionId);
+            System.out.println("Session retrieved: " + session);
 
             return gson.toJson(session);
         });
@@ -70,10 +71,21 @@ public class Server {
                         .setPrice(price)
                         .build());
 
-            SessionCreateParams createParams = builder.build();
-            Session session = Session.create(createParams);
+            Session session = null;
+            try {
+                SessionCreateParams createParams = builder.build();
+                session = Session.create(createParams);
+                System.out.println("Created session: " + session.getId());
+                System.out.println(String.format("Payment Intent: %s", session.getPaymentIntent()));
+                System.out.println(String.format("Payment Method Collection: %s", session.getPaymentMethodCollection()));
+                System.out.println(String.format("Payment Method Options: %s", session.getPaymentMethodOptions().toString()));
+                response.redirect(session.getUrl(), 303);
+            }
+            catch (Exception e) {
+                System.out.println("Create session Error: " + e.getMessage());
+                response.redirect(session.getCancelUrl(), 400);
+            }
 
-            response.redirect(session.getUrl(), 303);
             return "";
         });
 
@@ -91,6 +103,8 @@ public class Server {
                 response.status(400);
                 return "";
             }
+
+            System.out.println(String.format("Webhook received [%s]: %s", event.getType(), event.getData().toString()));
 
             switch (event.getType()) {
                 case "checkout.session.completed":
@@ -123,7 +137,7 @@ public class Server {
     public static void checkEnv() {
         Dotenv dotenv = Dotenv.load();
         String price = dotenv.get("PRICE");
-        if(price == "price_12345" || price == "" || price == null) {
+        if(price == null || "".equals(price) || "price_abc123...".equals(price)) {
             System.out.println("You must set a Price ID in the .env file. Please see the README.");
             System.exit(0);
         }

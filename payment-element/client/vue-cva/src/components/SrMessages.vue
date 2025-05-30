@@ -25,8 +25,8 @@ const splitMessages = computed(() => {
 const addDashboardLinks = (paymentIntent) => {
   return `https://dashboard.stripe.com/test/payments/${paymentIntent}`;
 };
-
 </script>
+
 <template>
   <div
     id="messages"
