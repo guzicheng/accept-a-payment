@@ -75,7 +75,7 @@ public class Server {
             try {
                 SessionCreateParams createParams = builder.build();
                 session = Session.create(createParams);
-                System.out.println("Created session: " + session.getId());
+                System.out.println("Session Created: " + session.getId());
                 System.out.println(String.format("Payment Intent: %s", session.getPaymentIntent()));
                 System.out.println(String.format("Payment Method Collection: %s", session.getPaymentMethodCollection()));
                 System.out.println(String.format("Payment Method Options: %s", session.getPaymentMethodOptions().toString()));
